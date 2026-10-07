@@ -6,16 +6,18 @@
   <title>Web Shooter Model</title>
   <style>
     :root {
-      --bg-1: #8b6a4b;
-      --bg-2: #4b382a;
-      --metal-1: #d8d8d8;
-      --metal-2: #a6a6a8;
-      --metal-3: #7a7a7e;
-      --metal-4: #4d4f54;
-      --red-1: #d92a2f;
-      --red-2: #a9161d;
-      --shadow: rgba(0,0,0,0.4);
-      --screw: #2a2a2d;
+      --bg-1: #7a5d45;
+      --bg-2: #382a23;
+      --bg-3: #201915;
+      --metal-1: #dfe1e4;
+      --metal-2: #b5b7bc;
+      --metal-3: #7d7e83;
+      --metal-4: #4a4d52;
+      --red-1: #e83842;
+      --red-2: #a6131d;
+      --red-3: #7f1118;
+      --black: #171a1d;
+      --dark: rgba(0,0,0,0.28);
     }
 
     * { box-sizing: border-box; }
@@ -24,11 +26,19 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background:
-        radial-gradient(circle at 50% 15%, rgba(255,255,255,0.18), transparent 24%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, #2f241d 100%);
       overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,0.22), rgba(122,93,69,0) 24%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 40%, var(--bg-3) 100%);
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.08));
+      pointer-events: none;
     }
 
     .scene {
@@ -38,229 +48,73 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      perspective: 1400px;
     }
 
     .device {
       position: relative;
-      width: min(82vw, 720px);
-      height: min(58vw, 460px);
-      transform: rotate(-5deg) scale(1.05);
-      filter: drop-shadow(0 18px 18px rgba(0,0,0,0.45));
+      width: min(82vw, 740px);
+      height: min(52vw, 430px);
+      transform: rotate(-5deg) rotateX(10deg);
+      filter: drop-shadow(0 16px 18px rgba(0,0,0,0.5));
     }
 
-    .base {
+    .wrist-shadow {
       position: absolute;
       left: 50%;
-      top: 52%;
-      width: 84%;
+      bottom: 8%;
+      width: 72%;
+      height: 18%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(0,0,0,0.42), rgba(0,0,0,0.08) 62%, transparent 100%);
+      filter: blur(8px);
+      opacity: 0.7;
+    }
+
+    .outer-frame {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      width: 76%;
       height: 56%;
       transform: translate(-50%, -50%);
-      border-radius: 16px 16px 18px 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(0,0,0,0.1));
-      box-shadow: inset 0 0 12px rgba(255,255,255,0.18);
+      border-radius: 16px 16px 24px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(0,0,0,0.08));
+      box-shadow: inset 0 0 16px rgba(255,255,255,0.18);
     }
 
     .frame {
       position: absolute;
       left: 50%;
-      top: 50%;
-      width: 78%;
-      height: 48%;
+      top: 52%;
+      width: 70%;
+      height: 46%;
       transform: translate(-50%, -50%);
-      background: linear-gradient(180deg, var(--metal-1) 0%, var(--metal-2) 18%, var(--metal-1) 40%, var(--metal-3) 100%);
-      border-radius: 16px 16px 14px 14px;
-      border: 2px solid rgba(78, 80, 86, 0.7);
+      border-radius: 18px 18px 22px 22px;
+      background: linear-gradient(180deg, var(--metal-1) 0%, var(--metal-2) 18%, var(--metal-1) 34%, var(--metal-3) 100%);
+      border: 2px solid rgba(66,68,72,0.9);
       box-shadow:
-        inset 0 6px 10px rgba(255,255,255,0.45),
-        inset 0 -8px 10px rgba(0,0,0,0.2),
-        0 8px 12px rgba(0,0,0,0.2);
+        inset 0 8px 10px rgba(255,255,255,0.35),
+        inset 0 -10px 12px rgba(0,0,0,0.18),
+        0 10px 14px rgba(0,0,0,0.22);
+      overflow: hidden;
     }
 
     .frame::before,
     .frame::after {
       content: "";
       position: absolute;
-      top: 12%;
-      width: 42px;
-      height: 76%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(0,0,0,0.18));
+      top: 13%;
+      width: 40px;
+      height: 70%;
       border-radius: 8px;
-      border: 1px solid rgba(70,70,72,0.7);
+      background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(0,0,0,0.12));
+      border: 1px solid rgba(61,63,66,0.8);
     }
 
-    .frame::before { left: 18px; }
-    .frame::after { right: 18px; }
-
-    .barrel-group {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 66%;
-      height: 36%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8%;
-    }
-
-    .barrel {
-      position: relative;
-      width: 18%;
-      height: 100%;
-      background: linear-gradient(180deg, #f4f4f4 0%, #bdbec1 14%, #7d7f84 45%, #dbdce1 100%);
-      border-radius: 18px 18px 12px 12px;
-      border: 2px solid rgba(58, 60, 64, 0.9);
-      box-shadow:
-        inset 0 10px 10px rgba(255,255,255,0.4),
-        inset 0 -8px 10px rgba(0,0,0,0.12),
-        0 8px 12px rgba(0,0,0,0.18);
-    }
-
-    .barrel::before {
-      content: "";
-      position: absolute;
-      width: 96%;
-      height: 10%;
-      left: 2%;
-      top: 16%;
-      border-radius: 8px;
-      background: rgba(70, 72, 75, 0.8);
-      box-shadow: inset 0 2px 3px rgba(255,255,255,0.2);
-    }
-
-    .barrel::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -8%;
-      width: 78%;
-      height: 16%;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(92,94,100,0.8), rgba(30,32,36,0.9));
-      border-radius: 8px;
-      box-shadow: inset 0 2px 3px rgba(255,255,255,0.2);
-    }
-
-    .tubing {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 70%;
-      height: 25%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10%;
-      z-index: 3;
-    }
-
-    .tube {
-      position: relative;
-      width: 21%;
-      height: 100%;
-      background: linear-gradient(180deg, #ff5b62 0%, var(--red-1) 35%, var(--red-2) 100%);
-      border-radius: 999px;
-      box-shadow:
-        inset 0 2px 8px rgba(255,255,255,0.2),
-        inset 0 -4px 10px rgba(0,0,0,0.28),
-        0 0 8px rgba(255,82,99,0.33);
-    }
-
-    .tube::before,
-    .tube::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 12%;
-      height: 100%;
-      border-radius: 999px;
-      background: rgba(80, 0, 0, 0.2);
-    }
-
-    .tube::after {
-      width: 80%;
-      height: 18%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255,255,255,0.1);
-      border-radius: 999px;
-    }
-
-    .buttons {
-      position: absolute;
-      left: 50%;
-      bottom: 11%;
-      width: 60%;
-      height: 12%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 5;
-    }
-
-    .screw {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #4d5258 0%, #1a1d1f 35%, #05070a 100%);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,0.16), 0 2px 4px rgba(0,0,0,0.25);
-    }
-
-    .screw::before {
-      content: "";
-      position: absolute;
-      inset: 2px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .rod {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 77%;
-      height: 10%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(180deg, rgba(136,136,136,0.9), rgba(90,90,92,0.95));
-      border-radius: 12px;
-      box-shadow: inset 0 3px 5px rgba(255,255,255,0.3), inset 0 -4px 8px rgba(0,0,0,0.3);
-      z-index: 2;
-    }
-
-    .rod::before,
-    .rod::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 10%;
-      height: 1px;
-      background: rgba(40,40,42,0.7);
-      transform: translateY(-50%);
-    }
-
-    .rod::before { left: 8%; }
-    .rod::after { right: 8%; }
-
-    .side-bar {
-      position: absolute;
-      width: 74%;
-      height: 8%;
-      left: 13%;
-      top: 24%;
-      background: linear-gradient(90deg, rgba(136,136,136,0.8), rgba(255,255,255,0.3), rgba(136,136,136,0.8));
-      border-radius: 999px;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.15), inset 0 -3px 5px rgba(0,0,0,0.2);
-      z-index: 4;
-    }
-
-    .side-bar.bottom {
-      top: 68%;
-    }
+    .frame::before { left: 16px; }
+    .frame::after { right: 16px; }
 
     .inner-plate {
       position: absolute;
@@ -269,59 +123,291 @@
       width: 62%;
       height: 22%;
       transform: translate(-50%, -50%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.08));
-      border: 1px solid rgba(62,63,66,0.7);
+      background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.09));
+      border: 1px solid rgba(77,80,85,0.85);
+      border-radius: 12px;
+      z-index: 2;
+    }
+
+    .horizontal-bar {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 74%;
+      height: 8%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(180deg, rgba(130,132,138,0.9), rgba(83,84,88,0.95));
+      border-radius: 999px;
+      box-shadow: inset 0 3px 4px rgba(255,255,255,0.28), inset 0 -4px 5px rgba(0,0,0,0.25);
+      z-index: 4;
+    }
+
+    .horizontal-bar.top { top: 30%; }
+    .horizontal-bar.bottom { top: 70%; }
+
+    .barrel-bank {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      width: 64%;
+      height: 34%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8%;
+      z-index: 6;
+    }
+
+    .barrel {
+      position: relative;
+      background: linear-gradient(180deg, #efeff2 0%, #c0c2c8 14%, #7b7e83 52%, #dfe1e5 100%);
+      border-radius: 16px 16px 10px 10px;
+      border: 2px solid rgba(63,66,72,0.9);
+      box-shadow:
+        inset 0 8px 10px rgba(255,255,255,0.35),
+        inset 0 -8px 10px rgba(0,0,0,0.15),
+        0 8px 10px rgba(0,0,0,0.14);
+      overflow: hidden;
+    }
+
+    .barrel::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 18%;
+      height: 11%;
+      border-radius: 8px;
+      background: rgba(70,70,74,0.78);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.15);
+    }
+
+    .barrel::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -7%;
+      width: 74%;
+      height: 16%;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: linear-gradient(180deg, rgba(90,90,96,0.8), rgba(27,30,32,0.9));
+    }
+
+    .tube-bank {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      width: 66%;
+      height: 18%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9%;
+      z-index: 7;
+    }
+
+    .tube {
+      position: relative;
+      background: linear-gradient(180deg, #f4575d 0%, var(--red-1) 34%, var(--red-2) 100%);
+      border-radius: 999px;
+      box-shadow:
+        inset 0 2px 8px rgba(255,255,255,0.16),
+        inset 0 -4px 8px rgba(0,0,0,0.28),
+        0 0 10px rgba(255, 95, 110, 0.18);
+    }
+
+    .tube::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 12%;
+      height: 62%;
+      transform: translate(-50%, -50%);
+      background: rgba(74, 0, 0, 0.2);
+      border-radius: 999px;
+    }
+
+    .tube::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 78%;
+      height: 18%;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .screw-row {
+      position: absolute;
+      left: 50%;
+      bottom: 12%;
+      width: 56%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-between;
+      z-index: 9;
+    }
+
+    .screw {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #4d5157 0%, #1a1d1f 30%, #090b0d 100%);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 2px 2px rgba(255,255,255,0.18), 0 2px 3px rgba(0,0,0,0.24);
+    }
+
+    .strap-band {
+      position: absolute;
+      left: 50%;
+      top: 72%;
+      width: 44%;
+      height: 9%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(42,44,47,0.86), rgba(18,20,21,0.98));
+      border-radius: 8px;
+      box-shadow: inset 0 3px 5px rgba(255,255,255,0.12), inset 0 -5px 5px rgba(0,0,0,0.26);
+      z-index: 3;
+    }
+
+    .strap-band::before {
+      content: "";
+      position: absolute;
+      inset: 12% 8%;
+      border-radius: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.05) 2px,
+        transparent 2px,
+        transparent 8px
+      );
+      opacity: 0.6;
+    }
+
+    .grip {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      width: 24%;
+      height: 18%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(85,88,92,0.9), rgba(39,42,45,1));
+      border-radius: 14px;
+      box-shadow:
+        inset 0 6px 10px rgba(255,255,255,0.12),
+        inset 0 -10px 12px rgba(0,0,0,0.28),
+        0 10px 12px rgba(0,0,0,0.18);
+      z-index: 2;
+    }
+
+    .grip::before {
+      content: "";
+      position: absolute;
+      inset: 8% 12%;
       border-radius: 10px;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 4px,
+        transparent 4px,
+        transparent 9px
+      );
+    }
+
+    .trigger {
+      position: absolute;
+      left: 63%;
+      top: 52%;
+      width: 12px;
+      height: 52px;
+      background: linear-gradient(180deg, #6a6d72 0%, #2a2c2f 100%);
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.45);
+      transform: rotate(-18deg);
+      box-shadow: inset 0 0 4px rgba(255,255,255,0.18);
+      z-index: 10;
+    }
+
+    .trigger::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 10%;
+      width: 200%;
+      height: 18%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+    }
+
+    .metal-support {
+      position: absolute;
+      left: 50%;
+      top: 18%;
+      width: 52%;
+      height: 12%;
+      transform: translateX(-50%);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(66,68,72,0.15));
+      border: 1px solid rgba(62,63,67,0.7);
       z-index: 1;
     }
 
-    .grip-shadow {
+    .clip-shadow {
       position: absolute;
       left: 50%;
-      top: 58%;
-      width: 68%;
-      height: 12%;
-      transform: translate(-50%, 0);
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.42));
+      bottom: 3%;
+      width: 18%;
+      height: 10%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(0,0,0,0.35), rgba(0,0,0,0.08) 60%, transparent 100%);
       filter: blur(12px);
-      opacity: 0.65;
-      z-index: 0;
+      opacity: 0.7;
     }
 
     @media (max-width: 700px) {
       .device {
         width: min(90vw, 540px);
-        height: min(70vw, 440px);
+        height: min(62vw, 360px);
       }
     }
   </style>
 </head>
 <body>
   <div class="scene">
-    <div class="device" aria-label="Web shooter model">
-      <div class="base"></div>
+    <div class="device">
+      <div class="wrist-shadow"></div>
+      <div class="outer-frame"></div>
+      <div class="metal-support"></div>
       <div class="frame"></div>
-      <div class="rod"></div>
       <div class="inner-plate"></div>
-      <div class="side-bar"></div>
-      <div class="side-bar bottom"></div>
+      <div class="horizontal-bar top"></div>
+      <div class="horizontal-bar bottom"></div>
 
-      <div class="barrel-group">
+      <div class="barrel-bank">
         <div class="barrel"></div>
         <div class="barrel"></div>
         <div class="barrel"></div>
         <div class="barrel"></div>
       </div>
 
-      <div class="tubing">
+      <div class="tube-bank">
         <div class="tube"></div>
         <div class="tube"></div>
         <div class="tube"></div>
         <div class="tube"></div>
       </div>
 
-      <div class="buttons">
+      <div class="strap-band"></div>
+      <div class="grip"></div>
+      <div class="trigger"></div>
+
+      <div class="screw-row">
         <div class="screw"></div>
         <div class="screw"></div>
         <div class="screw"></div>
@@ -330,7 +416,7 @@
         <div class="screw"></div>
       </div>
 
-      <div class="grip-shadow"></div>
+      <div class="clip-shadow"></div>
     </div>
   </div>
 </body>
